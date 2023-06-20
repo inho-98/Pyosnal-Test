@@ -18,7 +18,6 @@ final class AppHomeViewController: UIViewController, AppHomePresentable, AppHome
     
     weak var listener: AppHomePresentableListener?
     private let images: [String] = ["전체.fill", "CU", "GS25", "이마트24", "7eleven"]
-//    private let selectedImages: [String] = ["전체.fill", "CU.fill", "GS25.fill", "이마트24.fill", "7eleven.fill"]
     private let mockProducts: [String] = Array(repeating: "", count: 30)
     private var innerScrollLastOffsetY: CGFloat = 0
     private var currentPage: Int = 0 {
@@ -170,10 +169,6 @@ final class AppHomeViewController: UIViewController, AppHomePresentable, AppHome
             shopNavigationCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             shopNavigationCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             shopNavigationCollectionView.heightAnchor.constraint(equalToConstant: 44),
-//            shopNavigationCollectionView.topAnchor.constraint(
-//                greaterThanOrEqualTo: containerScrollView.frameLayoutGuide.topAnchor,
-//                constant: shopNavigationCollectionView.frame.height
-//            )
         ])
     }
     
@@ -300,20 +295,20 @@ extension AppHomeViewController: UICollectionViewDelegate {
         print(collectionView.contentOffset.y)
         
         if innerScroll && upScroll {
-            //안쪽을 스크롤할때 바깥쪽 스크롤뷰의 contentOffset을 0으로 줄이기
+            //안쪽을 위로 스크롤할때 바깥쪽 스크롤뷰의 contentOffset을 0으로 줄이기
             guard containerScrollView.contentOffset.y > 0 else { return }
             
             let maxOffsetY = max(containerScrollView.contentOffset.y - (innerScrollLastOffsetY - scrollView.contentOffset.y), 0)
             print("바깥 스크롤뷰: \(containerScrollView.contentOffset.y), 안쪽 마지막:\(innerScrollLastOffsetY), 안쪽 오프셋:\(scrollView.contentOffset.y)")
             let offsetY = min(maxOffsetY, outerScrollMaxOffset)
             print("maxOffset: \(maxOffsetY), offsetY: \(offsetY)")
-//            guard offsetY
             
             containerScrollView.contentOffset.y = offsetY
             collectionView.contentOffset.y = innerScrollLastOffsetY
         }
         
         if innerScroll && downScroll {
+            //안쪽을 아래로 스크롤할때 바깥쪽 먼저 아래로 스크롤
             guard containerScrollView.contentOffset.y < outerScrollMaxOffset else { return }
   
             let minOffsetY = min(containerScrollView.contentOffset.y + scrollView.contentOffset.y - innerScrollLastOffsetY ,outerScrollMaxOffset)
@@ -321,12 +316,6 @@ extension AppHomeViewController: UICollectionViewDelegate {
             
             containerScrollView.contentOffset.y = offsetY
             collectionView.contentOffset.y = innerScrollLastOffsetY
-//            맨 위에서 스크롤시 바깥 스크롤뷰 먼저 내려주던 것
-//            let minOffsetY = min(containerScrollView.contentOffset.y + collectionView.contentOffset.y, outerScrollMaxOffset)
-//            let offsetY = max(minOffsetY, 0)
-//
-//            containerScrollView.contentOffset.y = offsetY
-//            collectionView.contentOffset.y = 0
         }
     }
     
